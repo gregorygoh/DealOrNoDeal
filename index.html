@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deal Or No Deal</title>
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0b132b;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        .game-container {
+            position: relative;
+            max-width: 900px;
+            margin: 30px auto;
+        }
+        .game-board {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+        }
+        /* Briefcase hotspot buttons positioned via percentages */
+        .briefcase-btn {
+            position: absolute;
+            background: rgba(255, 215, 0, 0);
+            border: 0px solid #ffd700;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: transparent; /* Invisible by default, sits right over the numbers */
+        }
+        .briefcase-btn:hover:not(.clicked) {
+            background: rgba(255, 215, 0, 0.1);
+        }
+        /* Style for clicked/crossed-out briefcases */
+        .briefcase-btn.clicked {
+            background: rgba(255, 0, 0, 0.1);
+            border-color: red;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .briefcase-btn.clicked::after {
+            content: '❌';
+            position: absolute;
+            font-size: 1.5rem;
+            color: red;
+            text-shadow: 0 0 3px black;
+        }
+        .modal-body img {
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+        }
+
+        * Ensures the modal expands to fit large images naturally without stretching */
+.modal-lg-custom {
+    max-width: fit-content !important;
+}
+
+/* Keeps the image at its original native resolution and centers it */
+.original-img {
+    width: fit-content !important;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="container text-center my-4">
+    
+        <!-- Game Board Container -->
+        <div class="game-container">
+            <img src="Deal Or No Deal.png" alt="Deal Or No Deal Board" class="game-board" id="boardImage">
+            
+            <!-- Hotspots for Briefcases 1 to 18 (approximate percentage coordinates based on image layout) -->
+            <!-- Bottom Row: 1 to 6 -->
+            <button class="briefcase-btn" style="bottom: 16%; left: 18%; width: 8%; height: 10%;" data-id="1" onclick="openBriefcase(1)">1</button>
+            <button class="briefcase-btn" style="bottom: 16%; left: 32%; width: 8%; height: 10%;" data-id="2" onclick="openBriefcase(2)">2</button>
+            <button class="briefcase-btn" style="bottom: 16%; left: 45%; width: 8%; height: 10%;" data-id="3" onclick="openBriefcase(3)">3</button>
+            <button class="briefcase-btn" style="bottom: 16%; left: 59%; width: 8%; height: 10%;" data-id="4" onclick="openBriefcase(4)">4</button>
+            <button class="briefcase-btn" style="bottom: 16%; left: 72.5%; width: 8%; height: 10%;" data-id="5" onclick="openBriefcase(5)">5</button>
+            <button class="briefcase-btn" style="bottom: 16%; left: 86%; width: 8%; height: 10%;" data-id="6" onclick="openBriefcase(6)">6</button>
+
+            <!-- Row 2: 7 to 11 -->
+            <button class="briefcase-btn" style="bottom: 36%; left: 24.5%; width: 8%; height: 10%;" data-id="7" onclick="openBriefcase(7)">7</button>
+            <button class="briefcase-btn" style="bottom: 36%; left: 37.5%; width: 8%; height: 10%;" data-id="8" onclick="openBriefcase(8)">8</button>
+            <button class="briefcase-btn" style="bottom: 36%; left: 52%; width: 8%; height: 10%;" data-id="9" onclick="openBriefcase(9)">9</button>
+            <button class="briefcase-btn" style="bottom: 36%; left: 66%; width: 8%; height: 10%;" data-id="10" onclick="openBriefcase(10)">10</button>
+            <button class="briefcase-btn" style="bottom: 36%; left: 79%; width: 8%; height: 10%;" data-id="11" onclick="openBriefcase(11)">11</button>
+
+            <!-- Row 3: 12 to 15 -->
+            <button class="briefcase-btn" style="bottom: 56%; left: 31%; width: 8%; height: 10%;" data-id="12" onclick="openBriefcase(12)">12</button>
+            <button class="briefcase-btn" style="bottom: 56%; left: 45.5%; width: 8%; height: 10%;" data-id="13" onclick="openBriefcase(13)">13</button>
+            <button class="briefcase-btn" style="bottom: 56%; left: 59.5%; width: 8%; height: 10%;" data-id="14" onclick="openBriefcase(14)">14</button>
+            <button class="briefcase-btn" style="bottom: 56%; left: 72.5%; width: 8%; height: 10%;" data-id="15" onclick="openBriefcase(15)">15</button>
+
+            <!-- Top Row: 16 to 18 -->
+            <button class="briefcase-btn" style="bottom: 77%; left: 38.5%; width: 8%; height: 10%;" data-id="16" onclick="openBriefcase(16)">16</button>
+            <button class="briefcase-btn" style="bottom: 77%; left: 53%; width: 8%; height: 10%;" data-id="17" onclick="openBriefcase(17)">17</button>
+            <button class="briefcase-btn" style="bottom: 77%; left: 67.5%; width: 8%; height: 10%;" data-id="18" onclick="openBriefcase(18)">18</button>
+        </div>
+    </div>
+
+<!-- Bootstrap Modal for Briefcase Popup -->
+<div class="modal fade" id="briefcaseModal" tabindex="-1" aria-labelledby="briefcaseModalLabel" aria-hidden="true">
+    <!-- Added modal-lg-custom class here -->
+    <div class="modal-dialog modal-dialog-centered modal-lg-custom">
+        <div class="modal-content bg-dark text-light border-secondary">
+            <div class="modal-header border-secondary position-relative">
+                <!-- <h5 class="modal-title w-100 text-center" id="briefcaseModalLabel">Briefcase Contents</h5> -->
+                <button type="button" class="btn-close btn-close-white position-absolute end-0 me-3" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!-- Added original-img class here -->
+            <div class="modal-body text-center p-3">
+                <img id="modalBriefcaseImg" src="" alt="Briefcase Image" class="original-img">
+            </div>
+            <div class="modal-footer border-secondary justify-content-center">
+                <button type="button" class="btn btn-primary px-4" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Bootstrap 5 JS Bundle CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentBriefcaseId = null;
+        const modalElement = document.getElementById('briefcaseModal');
+        const briefcaseModal = new bootstrap.Modal(modalElement);
+
+        function openBriefcase(number) {
+            currentBriefcaseId = number;
+            // Set the corresponding image source (e.g., Briefcase2.png)
+            document.getElementById('modalBriefcaseImg').src = `Briefcase${number}.png`;
+            // document.getElementById('briefcaseModalLabel').textContent = `Briefcase #${number}`;
+            
+            // Show modal
+            briefcaseModal.show();
+        }
+
+        // When the modal is closed, cross out and disable the clicked briefcase button
+        modalElement.addEventListener('hidden.bs.modal', function () {
+            if (currentBriefcaseId !== null) {
+                const btn = document.querySelector(`button[data-id="${currentBriefcaseId}"]`);
+                if (btn) {
+                    btn.classList.add('clicked');
+                }
+                currentBriefcaseId = null;
+            }
+        });
+    </script>
+</body>
+</html>
