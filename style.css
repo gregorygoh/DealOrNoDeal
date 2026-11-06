@@ -1,0 +1,97 @@
+body{
+        background-color: #0b132b;
+        color: white;
+        font-family: Arial, sans-serif;
+    }
+
+.game-container {
+    position: relative;
+    max-width: 900px;
+    margin: 30px auto;
+}
+
+.game-board {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+}
+
+/* Speaker Icon Button in Top Right Corner */
+.audio-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.1);
+    border: 2px solid #ffd700;
+    color: #ffd700;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+}
+
+.audio-btn:hover {
+    background: rgba(255, 215, 0, 0.1);
+    color: #ffffff;
+    transform: scale(1.08);
+}
+
+        /* Briefcase hotspot buttons positioned via percentages */
+        .briefcase-btn {
+            position: absolute;
+            background: rgba(255, 215, 0, 0);
+            border: 0px solid #ffd700;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: transparent; /* Invisible by default, sits right over the numbers */
+        }
+        .briefcase-btn:hover:not(.clicked) {
+            background: rgba(255, 215, 0, 0.1);
+        }
+        /* Style for clicked/crossed-out briefcases */
+        .briefcase-btn.clicked {
+            background: rgba(255, 0, 0, 0.1);
+            border-color: red;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .briefcase-btn.clicked::after {
+            content: '❌';
+            position: absolute;
+            font-size: 1.5rem;
+            color: red;
+            text-shadow: 0 0 3px black;
+        }
+        .modal-body img {
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+        }
+
+        /* Ensures the modal expands to fit large images naturally without stretching */
+        .modal-lg-custom {
+            max-width: fit-content !important;
+        }
+
+        /* Keeps the image at its original native resolution and centers it */
+        .original-img {
+            width: fit-content !important;
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
